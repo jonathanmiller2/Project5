@@ -34,11 +34,26 @@ public class Proj5Main extends JFrame implements ActionListener, ChangeListener
 	private JButton addStationButton;
 	private JTextField addStationTextField;
 	
+	private JPanel redPanel;
+	private JPanel orangePanel;
+	private JSplitPane redOrangePane;
+	private JPanel yellowPanel;
+	private JSplitPane ROYellowPane;
+	private JPanel greenPanel;
+	private JSplitPane ROYGreenPane;
+	private JPanel bluePanel;
+	private JSplitPane ROYGBluePane;
+	private JPanel purplePanel;
+	private JSplitPane ROYGBPurplePane;
+	
 	private String[] stations;
 	
 	public Proj5Main()
 	{
-		setLayout(new GridBagLayout());
+		GridBagLayout GBL = new GridBagLayout();
+		int[] columnWidthOverride = {0, 0, 200};
+		GBL.columnWidths = columnWidthOverride;
+		setLayout(GBL);
 		
 		enterHammingDistLabel = new JLabel("Enter Hamming Dist:");
 		GridBagConstraints enterGBC = new GridBagConstraints();
@@ -223,6 +238,34 @@ public class Proj5Main extends JFrame implements ActionListener, ChangeListener
 		addStationTextFieldGBC.gridx = 1;
 		addStationTextFieldGBC.gridy = 11;
 		add(addStationTextField, addStationTextFieldGBC);
+		
+		
+		redPanel = new JPanel();
+		redPanel.setBackground(Color.RED);
+		orangePanel = new JPanel();
+		orangePanel.setBackground(Color.ORANGE);
+		yellowPanel = new JPanel();
+		yellowPanel.setBackground(Color.YELLOW);
+		greenPanel = new JPanel();
+		greenPanel.setBackground(Color.GREEN);
+		bluePanel = new JPanel();
+		bluePanel.setBackground(Color.BLUE);
+		purplePanel = new JPanel();
+		purplePanel.setBackground(Color.MAGENTA);
+		
+		redOrangePane = new JSplitPane(0, redPanel, orangePanel);
+		ROYellowPane = new JSplitPane(0, redOrangePane, yellowPanel);
+		ROYGreenPane = new JSplitPane(0, ROYellowPane, greenPanel);
+		ROYGBluePane = new JSplitPane(0, ROYGreenPane, bluePanel);
+		ROYGBPurplePane = new JSplitPane(0, ROYGBluePane, purplePanel);
+		GridBagConstraints colorsPaneGBC = new GridBagConstraints();
+		colorsPaneGBC.insets = new Insets(10, 10, 10, 10);
+		colorsPaneGBC.gridx = 2;
+		colorsPaneGBC.gridy = 0;
+		colorsPaneGBC.gridheight = 12;
+		colorsPaneGBC.fill = GridBagConstraints.BOTH;
+		add(ROYGBPurplePane, colorsPaneGBC);
+		
 	}
 
 
