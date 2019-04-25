@@ -6,6 +6,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 
 
@@ -310,7 +312,6 @@ public class Proj5Main extends JFrame implements ActionListener, ChangeListener
 			{
 				if(addStationTextField.getText().equals(s))
 				{
-					System.out.println("Duplicate station encountered");
 					duplicate = true;
 					break;
 				}
@@ -331,7 +332,21 @@ public class Proj5Main extends JFrame implements ActionListener, ChangeListener
 				
 				stations = newStations;
 				
-				compareWithJComboBox.addItem(addStationTextField.getText());
+				//Convert to arrayList to sort
+				ArrayList<String> al = new ArrayList<>(Arrays.asList(stations));
+				Collections.sort(al);
+				
+				//Reset combo box
+				compareWithJComboBox.removeAllItems();
+				
+				//Convert back to array and re-add to combo box
+				int i = 0;
+				for(String s: al)
+				{
+					stations[i] = s;
+					compareWithJComboBox.addItem(s);
+					i++;
+				}
 			}
 		}
 	}
