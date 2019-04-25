@@ -34,6 +34,8 @@ public class Proj5Main extends JFrame implements ActionListener, ChangeListener
 	private JButton addStationButton;
 	private JTextField addStationTextField;
 	
+	private String[] stations;
+	
 	public Proj5Main()
 	{
 		setLayout(new GridBagLayout());
@@ -98,7 +100,7 @@ public class Proj5Main extends JFrame implements ActionListener, ChangeListener
 		compareWithLabelGBC.fill = GridBagConstraints.HORIZONTAL;
 		this.add(compareWithLabel, compareWithLabelGBC);
 		
-		String[] stations = read();
+		stations = read();
 		compareWithJComboBox = new JComboBox<String>(stations);
 		compareWithJComboBox.setSelectedIndex(0);
 		GridBagConstraints compareJComboBoxGBC  = new GridBagConstraints();
@@ -109,7 +111,7 @@ public class Proj5Main extends JFrame implements ActionListener, ChangeListener
 		this.add(compareWithJComboBox, compareJComboBoxGBC);
 		
 		calculateHDButton = new JButton("Calculate HD");
-		showStationButton.addActionListener(this);
+		calculateHDButton.addActionListener(this);
 		GridBagConstraints calculateHDButtonGBC = new GridBagConstraints();
 		calculateHDButtonGBC.insets = new Insets(10, 10, 10, 10);
 		calculateHDButtonGBC.gridx = 0;
@@ -227,13 +229,96 @@ public class Proj5Main extends JFrame implements ActionListener, ChangeListener
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
+		if(event.getSource() == showStationButton)
+		{
+			stationTextArea.setText("");
+			
+			for(String s : stations)
+			{
+				if(calculateInputDistance(s, (String)compareWithJComboBox.getSelectedItem()) == hammingDistSlider.getValue())
+				{
+					stationTextArea.append(s + "\n");
+				}
+			}
+			
+		}
+		else if(event.getSource() == calculateHDButton)
+		{
+			System.out.println("Event recieved");
+			
+			int[] distArray = {0, 0, 0, 0, 0};
+			
+			for(String s: stations)
+			{
+				distArray[calculateInputDistance(s, (String)compareWithJComboBox.getSelectedItem())]++;
+			}
+			
+			dist0TextField.setText(Integer.toString(distArray[0]));
+			dist1TextField.setText(Integer.toString(distArray[1]));
+			dist2TextField.setText(Integer.toString(distArray[2]));
+			dist3TextField.setText(Integer.toString(distArray[3]));
+			dist4TextField.setText(Integer.toString(distArray[4]));
+		}
+		else if(event.getSource() == addStationButton)
+		{
+			boolean duplicate = false;
+			
+			for(String s: stations)
+			{
+				if(addStationTextField.getText().equals(s))
+				{
+					System.out.println("Duplicate station encountered");
+					duplicate = true;
+					break;
+				}
+			}
+			
+			if(!duplicate)
+			{
+				String[] newStations = new String[stations.length + 1];
+				
+				//Copy over the existing stations
+				for(int i = 0; i < stations.length; i++)
+				{
+					newStations[i] = stations[i];
+				}
+				
+				//Add the new station
+				newStations[stations.length] = addStationTextField.getText();
+				
+				stations = newStations;
+				
+				compareWithJComboBox.addItem(addStationTextField.getText());
+			}
+		}
+	}
+	
+	//This method finds the hamming distances for the two inputs
+	public int calculateInputDistance(String s1, String s2)
+	{
+		int inputDistance = 0;
 		
+		//Iterate through s1's character
+		for(int i = 0; i < s1.length(); i++)
+		{
+			//Compare to s2's character
+			if(s1.charAt(i) != s2.charAt(i))
+			{
+				//If different, increment the distance
+				inputDistance++;
+			}
+		}
+		
+		return inputDistance;
 	}
 	
 	@Override
 	public void stateChanged(ChangeEvent event)
 	{
-		JSlider src = (JSlider)event.getSource();
+		if(event.getSource() == hammingDistSlider)
+		{
+			showDistField.setText(Integer.toString(hammingDistSlider.getValue()));
+		}
 	}
 	
 	private String[] read()
